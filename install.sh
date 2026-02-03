@@ -1,6 +1,19 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
+cat << 'EOF'
+
+  ███████╗ ██████╗ ██╗     ██████╗  ██████╗ ████████╗
+  ██╔════╝██╔═══██╗██║     ██╔══██╗██╔═══██╗╚══██╔══╝
+  ███████╗██║   ██║██║     ██████╔╝██║   ██║   ██║   
+  ╚════██║██║   ██║██║     ██╔══██╗██║   ██║   ██║   
+  ███████║╚██████╔╝███████╗██████╔╝╚██████╔╝   ██║   
+  ╚══════╝ ╚═════╝ ╚══════╝╚═════╝  ╚═════╝    ╚═╝   
+                                                      
+       ⚡ OpenClaw Android Installer ⚡
+       
+EOF
+
 echo "[1/5] Termux: update + deps"
 pkg update -y && pkg upgrade -y
 pkg install -y proot-distro curl git jq ca-certificates
