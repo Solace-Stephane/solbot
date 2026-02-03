@@ -171,7 +171,7 @@ which openclaw && openclaw --version || echo "OpenClaw installation may have fai
 ' || true
 
 # Step 3e: Run onboarding
-echo "[ubuntu] Running onboarding (this may prompt you)..."
+echo "[ubuntu] Running onboarding..."
 proot-distro login ubuntu -- /bin/bash -lc '
 export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js"
 openclaw onboard
