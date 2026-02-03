@@ -13,6 +13,9 @@ echo -e "\033[1;36m  ╚══════╝ ╚═════╝ ╚═══
 echo ""
 echo -e "\033[1;37m       ⚡ OpenClaw Android Installer ⚡\033[0m"
 echo ""
+echo -e "\033[1;35m            by Stephane Nathaniel 💋\033[0m"
+echo -e "\033[1;31m                 (づ ̄ ³ ̄)づ\033[0m"
+echo ""
 sleep 5
 
 echo "[1/5] Termux: update + deps"
