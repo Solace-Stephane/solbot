@@ -1,6 +1,17 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
+# Parse arguments
+INSTALL_TOOLS=false
+for arg in "$@"; do
+  case $arg in
+    --tools)
+      INSTALL_TOOLS=true
+      shift
+      ;;
+  esac
+done
+
 # SolBot banner - display for 5 seconds
 clear
 echo ""
@@ -16,6 +27,10 @@ echo ""
 echo -e "\033[1;35m            by Stephane Nathaniel 💋\033[0m"
 echo -e "\033[1;31m                 (づ ̄ ³ ̄)づ\033[0m"
 echo ""
+if [ "$INSTALL_TOOLS" = true ]; then
+  echo -e "\033[1;33m        🔧 AI Tools will be installed\033[0m"
+  echo ""
+fi
 sleep 5
 
 echo "[1/5] Termux: update + deps"
@@ -73,9 +88,63 @@ echo "[ubuntu] onboarding (this may prompt you)"
 openclaw onboard
 '
 
-echo "[4/5] Done."
-echo "Gateway dashboard: http://127.0.0.1:18789/"
-echo ""
+# Install AI tools if --tools flag was passed
+if [ "$INSTALL_TOOLS" = true ]; then
+  echo "[4/5] Installing AI Tools..."
+  proot-distro login ubuntu --shared-tmp -- /bin/bash -lc '
+  set -euo pipefail
+  export DEBIAN_FRONTEND=noninteractive
+  
+  echo "[tools] Installing Python & pip..."
+  apt-get install -y python3 python3-pip python3-venv ffmpeg
+  
+  echo "[tools] Installing Chromium browser..."
+  apt-get install -y chromium-browser || apt-get install -y chromium || true
+  
+  echo "[tools] Installing OpenAI Whisper (tiny model)..."
+  pip3 install --break-system-packages openai-whisper || pip3 install openai-whisper
+  
+  echo "[tools] Pre-downloading Whisper tiny model..."
+  python3 -c "import whisper; whisper.load_model(\"tiny\")" || true
+  
+  echo "[tools] Installing additional AI utilities..."
+  # yt-dlp for downloading media
+  pip3 install --break-system-packages yt-dlp || pip3 install yt-dlp
+  
+  # httpie for API testing
+  apt-get install -y httpie || pip3 install --break-system-packages httpie || true
+  
+  # jq already installed, add yq for YAML
+  pip3 install --break-system-packages yq || pip3 install yq || true
+  
+  # ripgrep for fast searching
+  apt-get install -y ripgrep || true
+  
+  # tmux for session management
+  apt-get install -y tmux || true
+  
+  # imagemagick for image processing
+  apt-get install -y imagemagick || true
+  
+  # sox for audio processing
+  apt-get install -y sox || true
+  
+  echo "[tools] ✅ AI Tools installed!"
+  echo ""
+  echo "Installed tools:"
+  echo "  🌐 Chromium - Web browser for automation"
+  echo "  🎤 Whisper (tiny) - Speech-to-text"
+  echo "  📹 yt-dlp - Media downloader"
+  echo "  🔍 ripgrep - Fast text search"
+  echo "  🖼️  ImageMagick - Image processing"
+  echo "  🎵 sox/ffmpeg - Audio processing"
+  echo "  📺 tmux - Terminal multiplexer"
+  echo "  🔧 httpie, yq - API & YAML tools"
+  '
+else
+  echo "[4/5] Skipping AI Tools (use --tools to install)"
+fi
 
+echo ""
 echo "[5/5] Starting OpenClaw Gateway..."
 proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
