@@ -53,6 +53,63 @@ echo "[1/5] Termux: update + deps"
 pkg update -y && pkg upgrade -y
 pkg install -y proot-distro curl git jq ca-certificates
 
+# Create solbot command in Termux
+echo "[1/5] Creating solbot command..."
+cat > $PREFIX/bin/solbot << 'SOLBOT'
+#!/data/data/com.termux/files/usr/bin/bash
+# SolBot CLI - OpenClaw Gateway Manager
+
+show_help() {
+  echo ""
+  echo -e "\033[1;36m  ███████╗ ██████╗ ██╗     ██████╗  ██████╗ ████████╗\033[0m"
+  echo -e "\033[1;36m  ╚══════╝ ╚═════╝ ╚══════╝╚═════╝  ╚═════╝    ╚═╝   \033[0m"
+  echo ""
+  echo "Usage: solbot [command]"
+  echo ""
+  echo "Commands:"
+  echo "  --start    Start the OpenClaw gateway"
+  echo "  --stop     Stop the gateway"
+  echo "  --status   Check if gateway is running"
+  echo "  --shell    Open Ubuntu shell"
+  echo "  --logs     View gateway logs"
+  echo "  --help     Show this help"
+  echo ""
+}
+
+case "$1" in
+  --start|-s|start)
+    echo "Starting OpenClaw Gateway..."
+    proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
+    ;;
+  --stop|stop)
+    echo "Stopping OpenClaw Gateway..."
+    proot-distro login ubuntu -- /bin/bash -lc 'pkill -f "openclaw gateway" || echo "Gateway not running"'
+    ;;
+  --status|status)
+    echo "Checking gateway status..."
+    proot-distro login ubuntu -- /bin/bash -lc 'pgrep -f "openclaw gateway" && echo "Gateway is running" || echo "Gateway is not running"'
+    ;;
+  --shell|shell)
+    echo "Opening Ubuntu shell..."
+    proot-distro login ubuntu
+    ;;
+  --logs|logs)
+    echo "Gateway logs:"
+    proot-distro login ubuntu -- /bin/bash -lc 'cat /root/openclaw-launcher/logs/gateway.log 2>/dev/null || echo "No logs found"'
+    ;;
+  --help|-h|help|"")
+    show_help
+    ;;
+  *)
+    echo "Unknown command: $1"
+    show_help
+    exit 1
+    ;;
+esac
+SOLBOT
+chmod +x $PREFIX/bin/solbot
+echo "✅ solbot command installed!"
+
 echo "[2/5] Termux: install Ubuntu (proot-distro)"
 proot-distro install ubuntu || true
 
