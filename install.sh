@@ -69,6 +69,7 @@ show_help() {
   echo "Commands:"
   echo "  --start    Start the OpenClaw gateway"
   echo "  --stop     Stop the gateway"
+  echo "  --restart  Restart the gateway"
   echo "  --status   Check if gateway is running"
   echo "  --shell    Open Ubuntu shell"
   echo "  --logs     View gateway logs"
@@ -84,6 +85,12 @@ case "$1" in
   --stop|stop)
     echo "Stopping OpenClaw Gateway..."
     proot-distro login ubuntu -- /bin/bash -lc 'pkill -f "openclaw gateway" || echo "Gateway not running"'
+    ;;
+  --restart|restart)
+    echo "Restarting OpenClaw Gateway..."
+    proot-distro login ubuntu -- /bin/bash -lc 'pkill -f "openclaw gateway" || true'
+    sleep 1
+    proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
     ;;
   --status|status)
     echo "Checking gateway status..."
