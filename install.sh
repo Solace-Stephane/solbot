@@ -161,9 +161,13 @@ fi
 # Step 3d: Install OpenClaw
 echo "[ubuntu] Installing OpenClaw..."
 proot-distro login ubuntu --shared-tmp -- /bin/bash -lc '
-export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js"
+export DEBIAN_FRONTEND=noninteractive
+echo "Downloading OpenClaw installer..."
 curl -fsSL https://openclaw.ai/install.sh -o /tmp/openclaw_install.sh
+echo "Running OpenClaw installer..."
 bash /tmp/openclaw_install.sh
+echo "Verifying OpenClaw installation..."
+which openclaw && openclaw --version || echo "OpenClaw installation may have failed"
 ' || true
 
 # Step 3e: Run onboarding
