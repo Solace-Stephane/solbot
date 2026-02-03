@@ -176,45 +176,31 @@ openclaw onboard
 echo "[3/5] Ubuntu setup complete!"
 
 
-# Install AI tools if --tools flag was passed
+# Install AI tools if user said yes
 if [ "$INSTALL_TOOLS" = true ]; then
   echo "[4/5] Installing AI Tools..."
   proot-distro login ubuntu --shared-tmp -- /bin/bash -lc '
-  set -euo pipefail
   export DEBIAN_FRONTEND=noninteractive
   
   echo "[tools] Installing Python & pip..."
-  apt-get install -y python3 python3-pip python3-venv ffmpeg
+  apt-get install -y python3 python3-pip python3-venv ffmpeg || true
   
   echo "[tools] Installing Chromium browser..."
   apt-get install -y chromium-browser || apt-get install -y chromium || true
   
   echo "[tools] Installing OpenAI Whisper (tiny model)..."
-  pip3 install --break-system-packages openai-whisper || pip3 install openai-whisper
+  pip3 install --break-system-packages openai-whisper || pip3 install openai-whisper || true
   
   echo "[tools] Pre-downloading Whisper tiny model..."
   python3 -c "import whisper; whisper.load_model(\"tiny\")" || true
   
   echo "[tools] Installing additional AI utilities..."
-  # yt-dlp for downloading media
-  pip3 install --break-system-packages yt-dlp || pip3 install yt-dlp
-  
-  # httpie for API testing
+  pip3 install --break-system-packages yt-dlp || pip3 install yt-dlp || true
   apt-get install -y httpie || pip3 install --break-system-packages httpie || true
-  
-  # jq already installed, add yq for YAML
   pip3 install --break-system-packages yq || pip3 install yq || true
-  
-  # ripgrep for fast searching
   apt-get install -y ripgrep || true
-  
-  # tmux for session management
   apt-get install -y tmux || true
-  
-  # imagemagick for image processing
   apt-get install -y imagemagick || true
-  
-  # sox for audio processing
   apt-get install -y sox || true
   
   echo "[tools] ✅ AI Tools installed!"
@@ -228,9 +214,10 @@ if [ "$INSTALL_TOOLS" = true ]; then
   echo "  🎵 sox/ffmpeg - Audio processing"
   echo "  📺 tmux - Terminal multiplexer"
   echo "  🔧 httpie, yq - API & YAML tools"
-  '
+  ' || true
+  echo "[4/5] AI Tools setup complete!"
 else
-  echo "[4/5] Skipping AI Tools (use --tools to install)"
+  echo "[4/5] Skipping AI Tools"
 fi
 
 echo ""
