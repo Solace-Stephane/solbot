@@ -104,18 +104,11 @@ bash /tmp/openclaw_install.sh
 
 echo "[ubuntu] onboarding (this may prompt you)"
 openclaw onboard
-
-echo "[ubuntu] start gateway on :18789"
-( nohup openclaw gateway --port 18789 --verbose >> /root/openclaw-launcher/logs/gateway.log 2>&1 & echo $! > /root/openclaw-launcher/state/gateway.pid )
-sleep 1
-echo "[ubuntu] gateway pid: $(cat /root/openclaw-launcher/state/gateway.pid)"
-echo "[ubuntu] dashboard: http://127.0.0.1:18789/"
 '
 
 echo "[4/5] Done."
 echo "Gateway dashboard: http://127.0.0.1:18789/"
-echo "Logs (inside ubuntu): /root/openclaw-launcher/logs/gateway.log"
-echo "To stop (in Termux): proot-distro login ubuntu -- /bin/bash -lc \"kill \$(cat /root/openclaw-launcher/state/gateway.pid)\""
 echo ""
-echo "To restart gateway later:"
-echo "  proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'"
+
+echo "[5/5] Starting OpenClaw Gateway..."
+proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
