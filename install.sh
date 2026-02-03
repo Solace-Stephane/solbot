@@ -57,52 +57,60 @@ echo "[2/5] Termux: install Ubuntu (proot-distro)"
 proot-distro install ubuntu || true
 
 echo "[3/5] Ubuntu: bootstrap (Node 22 + OpenClaw)"
+
+# Step 3a: Install system dependencies
+echo "[ubuntu] Installing apt dependencies..."
 proot-distro login ubuntu --shared-tmp -- /bin/bash -lc '
-set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
-
 mkdir -p /root/openclaw-launcher/{bin,logs,state}
-
-echo "[ubuntu] apt deps"
 apt-get update -y
 apt-get install -y ca-certificates curl git jq gnupg lsb-release
+' || true
 
-echo "[ubuntu] install Node.js 22"
+# Step 3b: Install Node.js
+echo "[ubuntu] Installing Node.js 22..."
+proot-distro login ubuntu --shared-tmp -- /bin/bash -lc '
+export DEBIAN_FRONTEND=noninteractive
 curl -fsSL https://deb.nodesource.com/setup_22.x -o /tmp/nodesetup.sh
 bash /tmp/nodesetup.sh
 apt-get install -y nodejs
 node -v
 npm -v
+' || true
 
-# ============================================================
-# FIX: Android 11+ os.networkInterfaces() permission error
-# This creates a hijack script that overrides the problematic
-# Node.js function that fails on Android due to security restrictions
-# ============================================================
-echo "[ubuntu] creating network interface fix for Android 11+"
+# Step 3c: Create network interface fix
+echo "[ubuntu] Creating network interface fix for Android 11+..."
+proot-distro login ubuntu --shared-tmp -- /bin/bash -lc '
+mkdir -p /root/openclaw-launcher/bin
 cat > /root/openclaw-launcher/bin/network-hijack.js << '\''HIJACK'\''
 const os = require("os");
 os.networkInterfaces = () => ({});
 HIJACK
 
-# Add NODE_OPTIONS to bashrc so the fix persists across sessions
 if ! grep -q "network-hijack.js" /root/.bashrc 2>/dev/null; then
   echo "" >> /root/.bashrc
   echo "# Fix for Android 11+ os.networkInterfaces() permission error" >> /root/.bashrc
   echo "export NODE_OPTIONS=\"--require /root/openclaw-launcher/bin/network-hijack.js\"" >> /root/.bashrc
 fi
+' || true
 
-# Apply fix for current session
+# Step 3d: Install OpenClaw
+echo "[ubuntu] Installing OpenClaw..."
+proot-distro login ubuntu --shared-tmp -- /bin/bash -lc '
 export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js"
-# ============================================================
-
-echo "[ubuntu] install OpenClaw"
 curl -fsSL https://openclaw.ai/install.sh -o /tmp/openclaw_install.sh
-bash /tmp/openclaw_install.sh || true
+bash /tmp/openclaw_install.sh
+' || true
 
-echo "[ubuntu] onboarding (this may prompt you)"
-openclaw onboard || true
-'
+# Step 3e: Run onboarding
+echo "[ubuntu] Running onboarding (this may prompt you)..."
+proot-distro login ubuntu -- /bin/bash -lc '
+export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js"
+openclaw onboard
+' || true
+
+echo "[3/5] Ubuntu setup complete!"
+
 
 # Install AI tools if --tools flag was passed
 if [ "$INSTALL_TOOLS" = true ]; then
