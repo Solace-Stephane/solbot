@@ -1,18 +1,55 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
-cat << 'EOF'
+# Animated SolBot banner
+animate_banner() {
+  local colors=("\033[1;36m" "\033[1;35m" "\033[1;34m" "\033[1;33m" "\033[1;32m" "\033[1;31m")
+  local reset="\033[0m"
+  local banner=(
+    "  ███████╗ ██████╗ ██╗     ██████╗  ██████╗ ████████╗"
+    "  ██╔════╝██╔═══██╗██║     ██╔══██╗██╔═══██╗╚══██╔══╝"
+    "  ███████╗██║   ██║██║     ██████╔╝██║   ██║   ██║   "
+    "  ╚════██║██║   ██║██║     ██╔══██╗██║   ██║   ██║   "
+    "  ███████║╚██████╔╝███████╗██████╔╝╚██████╔╝   ██║   "
+    "  ╚══════╝ ╚═════╝ ╚══════╝╚═════╝  ╚═════╝    ╚═╝   "
+  )
+  
+  clear
+  local end_time=$((SECONDS + 5))
+  local frame=0
+  
+  while [ $SECONDS -lt $end_time ]; do
+    tput cup 0 0 2>/dev/null || true
+    echo ""
+    for i in "${!banner[@]}"; do
+      local color_idx=$(( (frame + i) % ${#colors[@]} ))
+      echo -e "${colors[$color_idx]}${banner[$i]}${reset}"
+    done
+    echo ""
+    echo -e "\033[1;37m       ⚡ OpenClaw Android Installer ⚡\033[0m"
+    echo ""
+    
+    # Animated loading dots
+    local dots=""
+    for ((d=0; d<(frame % 4); d++)); do dots+="●"; done
+    for ((d=(frame % 4); d<3; d++)); do dots+="○"; done
+    echo -e "\033[1;33m            Initializing $dots\033[0m"
+    
+    sleep 0.3
+    ((frame++))
+  done
+  
+  clear
+  echo ""
+  for line in "${banner[@]}"; do
+    echo -e "\033[1;36m$line\033[0m"
+  done
+  echo ""
+  echo -e "\033[1;37m       ⚡ OpenClaw Android Installer ⚡\033[0m"
+  echo ""
+}
 
-  ███████╗ ██████╗ ██╗     ██████╗  ██████╗ ████████╗
-  ██╔════╝██╔═══██╗██║     ██╔══██╗██╔═══██╗╚══██╔══╝
-  ███████╗██║   ██║██║     ██████╔╝██║   ██║   ██║   
-  ╚════██║██║   ██║██║     ██╔══██╗██║   ██║   ██║   
-  ███████║╚██████╔╝███████╗██████╔╝╚██████╔╝   ██║   
-  ╚══════╝ ╚═════╝ ╚══════╝╚═════╝  ╚═════╝    ╚═╝   
-                                                      
-       ⚡ OpenClaw Android Installer ⚡
-       
-EOF
+animate_banner
 
 echo "[1/5] Termux: update + deps"
 pkg update -y && pkg upgrade -y
