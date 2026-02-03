@@ -41,7 +41,8 @@ if [ "$INSTALL_TOOLS" = false ]; then
   echo -e "\033[1;33m│  (Whisper, Chromium, yt-dlp, ImageMagick, etc)      │\033[0m"
   echo -e "\033[1;33m└─────────────────────────────────────────────────────┘\033[0m"
   echo ""
-  read -p "Install tools? (y/n): " -n 1 -r
+  # Read from /dev/tty to work when script is piped from curl
+  read -p "Install tools? (y/n): " -n 1 -r REPLY < /dev/tty
   echo ""
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     INSTALL_TOOLS=true
