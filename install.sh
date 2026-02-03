@@ -172,8 +172,14 @@ which openclaw && openclaw --version || echo "OpenClaw installation may have fai
 
 # Step 3e: Run onboarding
 echo "[ubuntu] Running onboarding..."
-proot-distro login ubuntu -- /bin/bash -lc '
-export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js"
+proot-distro login ubuntu -- /bin/bash -c '
+# Verify fix exists
+if [ -f /root/openclaw-launcher/bin/network-hijack.js ]; then
+  echo "Network fix found, applying..."
+  export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js"
+else
+  echo "WARNING: network-hijack.js not found!"
+fi
 openclaw onboard
 ' || true
 
