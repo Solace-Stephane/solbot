@@ -7,7 +7,7 @@ One-command installer for [OpenClaw](https://openclaw.ai) on Android via Termux 
 Run this in Termux:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Solace-Stephane/openclaw-android/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Solace-Stephane/solbot/main/install.sh | bash
 ```
 
 ## What it does
