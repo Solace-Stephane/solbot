@@ -33,6 +33,21 @@ if [ "$INSTALL_TOOLS" = true ]; then
 fi
 sleep 5
 
+# Prompt user to install tools if not already specified via flag
+if [ "$INSTALL_TOOLS" = false ]; then
+  echo ""
+  echo -e "\033[1;33m┌─────────────────────────────────────────────────────┐\033[0m"
+  echo -e "\033[1;33m│  Install AI Tools?                                  │\033[0m"
+  echo -e "\033[1;33m│  (Whisper, Chromium, yt-dlp, ImageMagick, etc)      │\033[0m"
+  echo -e "\033[1;33m└─────────────────────────────────────────────────────┘\033[0m"
+  echo ""
+  read -p "Install tools? (y/n): " -n 1 -r
+  echo ""
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    INSTALL_TOOLS=true
+  fi
+fi
+
 echo "[1/5] Termux: update + deps"
 pkg update -y && pkg upgrade -y
 pkg install -y proot-distro curl git jq ca-certificates
