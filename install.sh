@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
-set -euo pipefail
+# Note: Not using set -e to prevent script from exiting on non-critical failures
 
 # Parse arguments
 INSTALL_TOOLS=false
@@ -97,10 +97,10 @@ export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js"
 
 echo "[ubuntu] install OpenClaw"
 curl -fsSL https://openclaw.ai/install.sh -o /tmp/openclaw_install.sh
-bash /tmp/openclaw_install.sh
+bash /tmp/openclaw_install.sh || true
 
 echo "[ubuntu] onboarding (this may prompt you)"
-openclaw onboard
+openclaw onboard || true
 '
 
 # Install AI tools if --tools flag was passed
