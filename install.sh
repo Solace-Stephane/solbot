@@ -80,7 +80,7 @@ show_help() {
 case "$1" in
   --start|-s|start)
     echo "Starting OpenClaw Gateway..."
-    proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
+    proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw gateway --port 18789 --verbose'
     ;;
   --stop|stop)
     echo "Stopping OpenClaw Gateway..."
@@ -90,7 +90,7 @@ case "$1" in
     echo "Restarting OpenClaw Gateway..."
     proot-distro login ubuntu -- /bin/bash -lc 'pkill -f "openclaw gateway" || true'
     sleep 1
-    proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
+    proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw gateway --port 18789 --verbose'
     ;;
   --status|status)
     echo "Checking gateway status..."
@@ -235,4 +235,4 @@ fi
 
 echo ""
 echo "[5/5] Starting OpenClaw Gateway..."
-proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
+proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw gateway --port 18789 --verbose'
