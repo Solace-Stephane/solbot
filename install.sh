@@ -67,14 +67,16 @@ show_help() {
   echo "Usage: solbot [command]"
   echo ""
   echo "Commands:"
-  echo "  --start    Start the OpenClaw gateway"
-  echo "  --stop     Stop the gateway"
-  echo "  --restart  Restart the gateway"
-  echo "  --reboot   Restart the Ubuntu environment"
-  echo "  --status   Check if gateway is running"
-  echo "  --shell    Open Ubuntu shell"
-  echo "  --logs     View gateway logs"
-  echo "  --help     Show this help"
+  echo "  --start      Start the OpenClaw gateway"
+  echo "  --stop       Stop the gateway"
+  echo "  --restart    Restart the gateway"
+  echo "  --reboot     Restart the Ubuntu environment"
+  echo "  --status     Check if gateway is running"
+  echo "  --onboard    Run OpenClaw onboarding"
+  echo "  --configure  Run OpenClaw configuration"
+  echo "  --shell      Open Ubuntu shell"
+  echo "  --logs       View gateway logs"
+  echo "  --help       Show this help"
   echo ""
 }
 
@@ -103,6 +105,14 @@ case "$1" in
   --status|status)
     echo "Checking gateway status..."
     proot-distro login ubuntu -- /bin/bash -lc 'pgrep -f "openclaw gateway" && echo "Gateway is running" || echo "Gateway is not running"'
+    ;;
+  --onboard|onboard)
+    echo "Running OpenClaw onboarding..."
+    proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw onboard'
+    ;;
+  --configure|configure|--config|config)
+    echo "Running OpenClaw configuration..."
+    proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw configure'
     ;;
   --shell|shell)
     echo "Opening Ubuntu shell..."
