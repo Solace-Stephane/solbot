@@ -1,4 +1,4 @@
-# OpenClaw Android Setup
+# SolBot ⚡
 
 One-command installer for [OpenClaw](https://openclaw.ai) on Android via Termux + Ubuntu proot.
 
@@ -10,6 +10,12 @@ Run this in Termux:
 curl -fsSL https://raw.githubusercontent.com/Solace-Stephane/solbot/main/install.sh | bash
 ```
 
+**With AI Tools** (Whisper, Chromium, yt-dlp, ImageMagick, etc):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Solace-Stephane/solbot/main/install.sh | bash -s -- --tools
+```
+
 ## What it does
 
 1. Updates Termux and installs dependencies
@@ -17,7 +23,43 @@ curl -fsSL https://raw.githubusercontent.com/Solace-Stephane/solbot/main/install
 3. Sets up Node.js 22 inside Ubuntu
 4. **Applies Android 11+ fix** for `os.networkInterfaces()` permission error
 5. Installs and configures OpenClaw
-6. Starts the OpenClaw gateway on port 18789
+6. Installs the `solbot` CLI for easy gateway management
+7. Starts the OpenClaw gateway on port 18789
+
+## SolBot CLI Commands
+
+After installation, use the `solbot` command in Termux to manage the gateway:
+
+| Command | Description |
+|---------|-------------|
+| `solbot --start` | Start the OpenClaw gateway |
+| `solbot --stop` | Stop the gateway |
+| `solbot --restart` | Restart the gateway |
+| `solbot --status` | Check if gateway is running |
+| `solbot --shell` | Open Ubuntu shell |
+| `solbot --logs` | View gateway logs |
+| `solbot --help` | Show help |
+
+**Examples:**
+
+```bash
+# Start the gateway
+solbot --start
+
+# Check status
+solbot --status
+
+# View logs
+solbot --logs
+
+# Open Ubuntu shell for advanced tasks
+solbot --shell
+```
+
+## Gateway Access
+
+- **Dashboard**: http://127.0.0.1:18789/
+- **Logs**: `/root/openclaw-launcher/logs/gateway.log` (inside Ubuntu)
 
 ## Android 11+ Fix
 
@@ -25,25 +67,23 @@ This script includes a fix for the `SystemError [ERR_SYSTEM_ERROR]: uv_interface
 
 The fix creates a hijack script that overrides `os.networkInterfaces()` and sets `NODE_OPTIONS` to load it automatically.
 
-## After Installation
+## AI Tools (Optional)
 
-- **Gateway dashboard**: http://127.0.0.1:18789/
-- **Logs**: `/root/openclaw-launcher/logs/gateway.log` (inside Ubuntu)
+When installed with `--tools`, you get:
 
-### Restart gateway
-```bash
-proot-distro login ubuntu -- /bin/bash -lc 'openclaw gateway --port 18789 --verbose'
-```
-
-### Stop gateway
-```bash
-proot-distro login ubuntu -- /bin/bash -lc 'kill $(cat /root/openclaw-launcher/state/gateway.pid)'
-```
+- 🌐 **Chromium** - Web browser for automation
+- 🎤 **Whisper** (tiny) - Speech-to-text
+- 📹 **yt-dlp** - Media downloader
+- 🔍 **ripgrep** - Fast text search
+- 🖼️ **ImageMagick** - Image processing
+- 🎵 **sox/ffmpeg** - Audio processing
+- 📺 **tmux** - Terminal multiplexer
+- 🔧 **httpie, yq** - API & YAML tools
 
 ## Requirements
 
 - Android device with Termux installed
-- ~2GB storage space
+- ~2GB storage space (~4GB with AI tools)
 - Internet connection
 
 ## License
