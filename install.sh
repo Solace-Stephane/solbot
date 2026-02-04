@@ -70,6 +70,7 @@ show_help() {
   echo "  --start      Start the OpenClaw gateway"
   echo "  --stop       Stop the gateway"
   echo "  --restart    Restart the gateway"
+  echo "  --fix        Fix 'gateway failed to start' issues"
   echo "  --reboot     Restart the Ubuntu environment"
   echo "  --status     Check if gateway is running"
   echo "  --onboard    Run OpenClaw onboarding"
@@ -83,6 +84,9 @@ show_help() {
 case "$1" in
   --start|-s|start)
     echo "Starting OpenClaw Gateway..."
+    echo "Cleaning up any stale processes..."
+    proot-distro login ubuntu -- /bin/bash -lc 'pkill -9 -f "openclaw gateway" 2>/dev/null || true; fuser -k 18789/tcp 2>/dev/null || true; rm -f /root/.openclaw/*.lock /root/.openclaw/gateway.pid /tmp/*.lock 2>/dev/null || true'
+    sleep 1
     proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw gateway --port 18789 --verbose'
     ;;
   --stop|stop)
@@ -93,6 +97,19 @@ case "$1" in
     echo "Restarting OpenClaw Gateway..."
     proot-distro login ubuntu -- /bin/bash -lc 'pkill -f "openclaw gateway" || true'
     sleep 1
+    proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw gateway --port 18789 --verbose'
+    ;;
+  --fix|fix)
+    echo "🔧 Fixing gateway issues..."
+    echo "[1/4] Killing all proot processes..."
+    pkill -9 -f proot 2>/dev/null || true
+    sleep 1
+    echo "[2/4] Killing any processes on port 18789..."
+    proot-distro login ubuntu -- /bin/bash -lc 'fuser -k 18789/tcp 2>/dev/null || true'
+    echo "[3/4] Removing stale lock files..."
+    proot-distro login ubuntu -- /bin/bash -lc 'rm -f /root/.openclaw/*.lock /root/.openclaw/gateway.pid /tmp/*.lock 2>/dev/null || true; pkill -9 -f "openclaw gateway" 2>/dev/null || true'
+    sleep 1
+    echo "[4/4] Starting gateway fresh..."
     proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw gateway --port 18789 --verbose'
     ;;
   --reboot|reboot)

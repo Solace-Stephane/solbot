@@ -35,6 +35,7 @@ After installation, use the `solbot` command in Termux to manage the gateway:
 | `solbot --start` | Start the OpenClaw gateway |
 | `solbot --stop` | Stop the gateway |
 | `solbot --restart` | Restart the gateway |
+| `solbot --fix` | Fix "gateway failed to start" issues |
 | `solbot --reboot` | Restart the Ubuntu environment |
 | `solbot --status` | Check if gateway is running |
 | `solbot --onboard` | Run OpenClaw onboarding |
