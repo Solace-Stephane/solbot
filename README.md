@@ -86,9 +86,17 @@ When installed with `--tools`, you get:
 
 ## Requirements
 
-- Android device with Termux installed
+- Android device with [Termux](https://play.google.com/store/apps/details?id=com.termux&hl=en) installed
 - ~2GB storage space (~4GB with AI tools)
 - Internet connection
+
+## After Installation
+
+The gateway starts automatically after install. If you close Termux or restart your device, run:
+
+```bash
+solbot --start
+```
 
 ## License
 
