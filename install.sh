@@ -70,6 +70,7 @@ show_help() {
   echo "  --start    Start the OpenClaw gateway"
   echo "  --stop     Stop the gateway"
   echo "  --restart  Restart the gateway"
+  echo "  --reboot   Restart the Ubuntu environment"
   echo "  --status   Check if gateway is running"
   echo "  --shell    Open Ubuntu shell"
   echo "  --logs     View gateway logs"
@@ -91,6 +92,13 @@ case "$1" in
     proot-distro login ubuntu -- /bin/bash -lc 'pkill -f "openclaw gateway" || true'
     sleep 1
     proot-distro login ubuntu -- /bin/bash -lc 'export NODE_OPTIONS="--require /root/openclaw-launcher/bin/network-hijack.js" && openclaw gateway --port 18789 --verbose'
+    ;;
+  --reboot|reboot)
+    echo "Rebooting Ubuntu environment..."
+    pkill -9 -f proot 2>/dev/null || true
+    sleep 2
+    echo "Ubuntu environment stopped. Starting fresh..."
+    proot-distro login ubuntu -- /bin/bash -lc 'echo "Ubuntu restarted successfully!"'
     ;;
   --status|status)
     echo "Checking gateway status..."
