@@ -75,6 +75,7 @@ show_help() {
   echo "  --status     Check if gateway is running"
   echo "  --onboard    Run OpenClaw onboarding"
   echo "  --configure  Run OpenClaw configuration"
+  echo "  --update     Update SolBot to latest version"
   echo "  --shell      Open Ubuntu shell"
   echo "  --logs       View gateway logs"
   echo "  --help       Show this help"
@@ -138,6 +139,11 @@ case "$1" in
   --logs|logs)
     echo "Gateway logs:"
     proot-distro login ubuntu -- /bin/bash -lc 'cat /root/openclaw-launcher/logs/gateway.log 2>/dev/null || echo "No logs found"'
+    ;;
+  --update|update)
+    echo "🔄 Updating SolBot..."
+    echo "Re-running installer to update all components..."
+    curl -fsSL https://raw.githubusercontent.com/Solace-Stephane/solbot/main/install.sh | bash
     ;;
   --help|-h|help|"")
     show_help
