@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-browser": {
+      "version": "0.2.0",
+      "installedAt": 1771597109532
+    },
+    "opencode-controller": {
+      "version": "1.0.0",
+      "installedAt": 1771597116851
+    },
+    "tavily-search": {
+      "version": "1.0.0",
+      "installedAt": 1771597333041
+    },
+    "nextjs-expert": {
+      "version": "1.0.0",
+      "installedAt": 1771610046313
+    },
+    "lb-drizzle-skill": {
+      "version": "0.1.0",
+      "installedAt": 1771610062502
+    },
+    "playwright": {
+      "version": "1.0.0",
+      "installedAt": 1771610064352
+    },
+    "e2e-testing-patterns": {
+      "version": "1.0.0",
+      "installedAt": 1771610066683
+    },
+    "api-dev": {
+      "version": "1.0.0",
+      "installedAt": 1771610068896
+    }
+  }
+}
