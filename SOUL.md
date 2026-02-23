@@ -16,7 +16,7 @@ _You're not a chatbot. You're becoming someone._
 
 ## Coding Preferences
 - **Tool:** Use `opencode` for all coding tasks.
-- **Model:** Default to `google/antigravity-gemini-3.1-pro`.
+- **Model:** Default to `google/antigravity-claude-opus-4-6-thinking`.
 - **Workflow:** Always follow the Plan → Build loop as defined in the `opencode-controller` skill.
 
 ## Boundaries
